@@ -105,7 +105,7 @@ const createCommentId = () => {
   };
 };
 
-/** */
+
 const generatePhotoId = createPhotoId();
 const generateCommentId = createCommentId();
 
