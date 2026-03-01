@@ -34,6 +34,16 @@ const MESSAGES = [
 ];
 
 
+/**
+ * Возвращает случайное целое число из диапазона [min, max] включительно.
+ *
+ * @param {number} min - Минимальное значение диапазона
+ * @param {number} max - Максимальное значение диапазона
+ * @returns {number} Случайное целое число
+ *
+ * @example
+ * getRandomInteger(1, 10); // 5
+ */
 const getRandomInteger = (min, max) => {
   const lower = Math.ceil(Math.min(min, max));
   const upper = Math.floor(Math.max(min, max));
@@ -43,9 +53,29 @@ const getRandomInteger = (min, max) => {
 };
 
 
+/**
+ * Возвращает случайный элемент из переданного массива.
+ *
+ * @param {Array} elements - Массив элементов
+ * @returns {*} Случайный элемент массива
+ *
+ * @example
+ * getRandomArrayElement(['a', 'b', 'c']); // 'b'
+ */
 const getRandomArrayElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];
 
 
+/**
+ * Создаёт генератор уникальных идентификаторов для фотографий.
+ * Возвращаемая функция при каждом вызове увеличивает счётчик на 1 и возвращает новое значение.
+ *
+ * @returns {function(): number} Функция-генератор идентификаторов
+ *
+ * @example
+ * const generateId = createPhotoId();
+ * generateId(); // 1
+ * generateId(); // 2
+ */
 const createPhotoId = () => {
   let lastGenetatedId = 0;
 
@@ -56,6 +86,16 @@ const createPhotoId = () => {
 };
 
 
+/**
+ * Создаёт генератор уникальных идентификаторов для комментариев.
+ * Аналогичен createPhotoId, но используется для комментариев.
+ *
+ * @returns {function(): number} Функция-генератор идентификаторов комментариев
+ *
+ * @example
+ * const generateCommentId = createCommentId();
+ * generateCommentId(); // 1
+ */
 const createCommentId = () => {
   let lastGenetatedId = 0;
 
@@ -65,11 +105,30 @@ const createCommentId = () => {
   };
 };
 
-
+/** */
 const generatePhotoId = createPhotoId();
 const generateCommentId = createCommentId();
 
 
+/**
+ * Создаёт объект комментария со случайными данными.
+ * Поля:
+ * - id: уникальный идентификатор
+ * - avatar: путь к аватарке
+ * - message: строка из одного или двух предложений массива MESSAGES
+ * - name: случайное имя из массива NAMES
+ *
+ * @returns {Object} Объект комментария
+ *
+ * @example
+ * createComment();
+ * // {
+ * //   id: 5,
+ * //   avatar: 'img/avatar-3.svg',
+ * //   message: 'Всё отлично! Моя бабушка случайно чихнула...',
+ * //   name: 'Дарья'
+ * // }
+ */
 const createComment = () => {
   const commentId = generateCommentId();
   const sentencesCount = getRandomInteger(1, 2);
@@ -78,9 +137,7 @@ const createComment = () => {
   if (sentencesCount === 1) {
     messages = [getRandomArrayElement(MESSAGES)];
   } else {
-    // Берём первую фразу
     const first = getRandomArrayElement(MESSAGES);
-    // Ищем вторую, отличную от первой
     let second;
     do {
       second = getRandomArrayElement(MESSAGES);
@@ -97,6 +154,27 @@ const createComment = () => {
 };
 
 
+/**
+ * Создаёт объект фотографии со случайными данными.
+ * Поля:
+ * - id: уникальный идентификатор
+ * - url: путь к изображению
+ * - description: случайное описание из массива PHOTO_DESCRIPTIONS
+ * - likes: случайное число от 15 до 300
+ * - comments: массив комментариев (длина от 0 до 30)
+ *
+ * @returns {Object} Объект фотографии
+ *
+ * @example
+ * createPhoto();
+ * // {
+ * //   id: 1,
+ * //   url: 'photos/1.jpg',
+ * //   description: 'Момент из жизни',
+ * //   likes: 150,
+ * //   comments: [ { ... }, { ... } ]
+ * // }
+ */
 const createPhoto = () => {
   const photoId = generatePhotoId();
 
