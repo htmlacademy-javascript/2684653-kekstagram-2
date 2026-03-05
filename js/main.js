@@ -1,3 +1,7 @@
+const PHOTO_COUNT = 25;
+const COMMENTS_MAX_COUNT = 30;
+const AVATAR_MAX_ID = 6;
+
 const PHOTO_DESCRIPTIONS = [
   'Момент из жизни',
   'Красивый кадр',
@@ -33,6 +37,12 @@ const MESSAGES = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'
 ];
 
+const Likes = {
+  MIN: 15,
+  MAX: 200
+};
+
+const photos = [];
 
 /**
  * Возвращает случайное целое число из диапазона [min, max] включительно.
@@ -88,7 +98,7 @@ const createPhotoId = () => {
 
 /**
  * Создаёт генератор уникальных идентификаторов для комментариев.
- * Аналогичен createPhotoId, но используется для комментариев.
+ * Возвращаемая функция при каждом вызове увеличивает счётчик на 1 и возвращает новое значение.
  *
  * @returns {function(): number} Функция-генератор идентификаторов комментариев
  *
@@ -115,8 +125,8 @@ const generateCommentId = createCommentId();
  * Поля:
  * - id: уникальный идентификатор
  * - avatar: путь к аватарке
- * - message: строка из одного или двух предложений массива MESSAGES
- * - name: случайное имя из массива NAMES
+ * - message: строка из одного или двух предложений массива `MESSAGES`
+ * - name: случайное имя из массива `NAMES`
  *
  * @returns {Object} Объект комментария
  *
@@ -130,25 +140,24 @@ const generateCommentId = createCommentId();
  * // }
  */
 const createComment = () => {
-  const commentId = generateCommentId();
   const sentencesCount = getRandomInteger(1, 2);
-  let messages = [];
+  let message;
 
   if (sentencesCount === 1) {
-    messages = [getRandomArrayElement(MESSAGES)];
+    message = getRandomArrayElement(MESSAGES);
   } else {
     const first = getRandomArrayElement(MESSAGES);
     let second;
     do {
       second = getRandomArrayElement(MESSAGES);
     } while (second === first);
-    messages = [first, second];
+    message = `${first} ${second}`;
   }
 
   return {
-    id: commentId,
-    avatar: `img/avatar-${getRandomInteger(1, 6)}.svg`,
-    message: messages.join(' '),
+    id: generateCommentId(),
+    avatar: `img/avatar-${getRandomInteger(1, AVATAR_MAX_ID)}.svg`,
+    message: message,
     name: getRandomArrayElement(NAMES)
   };
 };
@@ -159,9 +168,9 @@ const createComment = () => {
  * Поля:
  * - id: уникальный идентификатор
  * - url: путь к изображению
- * - description: случайное описание из массива PHOTO_DESCRIPTIONS
- * - likes: случайное число от 15 до 300
- * - comments: массив комментариев (длина от 0 до 30)
+ * - description: случайное описание из массива `PHOTO_DESCRIPTIONS`
+ * - likes: случайное число от `Likes.MIN` до `Likes.MAX`
+ * - comments: массив комментариев (длина от 0 до `COMMENTS_MAX_COUNT`)
  *
  * @returns {Object} Объект фотографии
  *
@@ -182,11 +191,26 @@ const createPhoto = () => {
     id: photoId,
     url: `photos/${photoId}.jpg`,
     description: getRandomArrayElement(PHOTO_DESCRIPTIONS),
-    likes: getRandomInteger(15, 300),
-    comments: Array.from({length: getRandomInteger(0, 30)}, createComment)
+    likes: getRandomInteger(Likes.MIN, Likes.MAX),
+    comments: Array.from({length: getRandomInteger(0, COMMENTS_MAX_COUNT)}, createComment)
   };
 
 };
 
 
-let photos = Array.from({length: 25}, createPhoto);
+/**
+ * Создаёт заданное количество объектов фотографий и добавляет их в массив `photos`.
+ *
+ * @param {number} photoCount - Количество фотографий, которые необходимо создать.
+ * @returns {void} Функция наполняет внешний массив `photos`.
+ *
+ * @example
+ * createPhotos(5); // добавит 5 новых фотографий в массив photos
+ */
+const createPhotos = (photoCount) => {
+  for (let i = 0; i < photoCount; i++) {
+    photos.push(createPhoto());
+  }
+};
+
+createPhotos(PHOTO_COUNT);
