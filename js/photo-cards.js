@@ -1,28 +1,25 @@
-import {createPhotos} from './data.js';
-
-const PHOTO_COUNT = 25;
-
+const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 const picturesSection = document.querySelector('.pictures');
 
-const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
-const picturesFragment = document.createDocumentFragment();
 
-
-createPhotos(PHOTO_COUNT).forEach((photo) => {
+const renderPicture = (photo) => {
   const photoCard = pictureTemplate.cloneNode(true);
 
   const cardImg = photoCard.querySelector('img');
   cardImg.src = photo.url;
   cardImg.alt = photo.description;
 
-  const cardComments = photoCard.querySelector('.picture__comments');
-  cardComments.textContent = photo.comments.length;
+  photoCard.querySelector('.picture__comments').textContent = photo.comments.length;
+  photoCard.querySelector('.picture__likes').textContent = photo.likes;
 
-  const cardLikes = photoCard.querySelector('.picture__likes');
-  cardLikes.textContent = photo.likes;
-
-  picturesFragment.append(photoCard);
-});
+  return photoCard;
+};
 
 
-picturesSection.append(picturesFragment);
+const renderPictures = (photos) => {
+  const picturesFragment = document.createDocumentFragment();
+  photos.forEach((photo) => picturesFragment.append(renderPicture(photo)));
+  picturesSection.append(picturesFragment);
+};
+
+export {renderPictures};
