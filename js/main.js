@@ -1,5 +1,5 @@
 import {createPhotos} from './data.js';
-import {renderPictures} from './photo-cards.js';
+import {renderPictures} from './pictures.js';
 
 const PHOTO_COUNT = 25;
 

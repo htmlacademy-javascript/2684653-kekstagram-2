@@ -1,3 +1,5 @@
+import {openBigPicture} from './big-picture.js';
+
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 const picturesSection = document.querySelector('.pictures');
 
@@ -11,6 +13,8 @@ const renderPicture = (photo) => {
 
   photoCard.querySelector('.picture__comments').textContent = photo.comments.length;
   photoCard.querySelector('.picture__likes').textContent = photo.likes;
+
+  photoCard.addEventListener('click', () => openBigPicture(photo));
 
   return photoCard;
 };

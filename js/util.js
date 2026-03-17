@@ -28,4 +28,12 @@ const getRandomInteger = (min, max) => {
  */
 const getRandomArrayElement = (elements) => elements[getRandomInteger(0, elements.length - 1)];
 
-export {getRandomInteger, getRandomArrayElement};
+
+/**
+ * Проверяет, является ли нажатая клавиша клавишей Escape.
+ * @param {KeyboardEvent} evt - Объект события клавиатуры
+ * @returns {boolean} Возвращает `true`, если нажата клавиша Escape, иначе `false`
+ */
+const isEscapeKey = (evt) => evt.key === 'Escape';
+
+export {getRandomInteger, getRandomArrayElement, isEscapeKey};
