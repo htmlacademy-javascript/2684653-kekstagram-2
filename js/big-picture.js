@@ -77,10 +77,5 @@ const openBigPicture = (photo) => {
 
 
 bigPicture.querySelector('.big-picture__cancel').addEventListener('click', () => closeBigPicture());
-bigPicture.addEventListener('click', (evt) => {
-  if (!evt.target.closest('.big-picture__preview')) {
-    closeBigPicture();
-  }
-});
 
 export {openBigPicture};
