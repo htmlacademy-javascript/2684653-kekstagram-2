@@ -4,6 +4,12 @@ const pictureTemplate = document.querySelector('#picture').content.querySelector
 const picturesSection = document.querySelector('.pictures');
 
 
+/**
+ * Создаёт DOM-элемент карточки фотографии.
+ *
+ * @param {Object} photo - Данные фотографии
+ * @returns {HTMLElement} Элемент карточки фотографии
+ */
 const renderPicture = (photo) => {
   const photoCard = pictureTemplate.cloneNode(true);
 
@@ -23,6 +29,11 @@ const renderPicture = (photo) => {
 };
 
 
+/**
+ * Отрисовывает все фотографии на странице
+ *
+ * @param {Array<Object>} photos - Массив объектов фотографий
+ */
 const renderPictures = (photos) => {
   const picturesFragment = document.createDocumentFragment();
   photos.forEach((photo) => picturesFragment.append(renderPicture(photo)));

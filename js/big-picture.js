@@ -18,6 +18,13 @@ const bigPictureShownComments = bigPicture.querySelector('.social__comment-shown
 let totalCommentsCount, shownCommentsCount, commentsList;
 
 
+/**
+ * Создаёт DOM-элемент для одного комментария
+ *
+ * @param {Object} comment - Данные комментария
+ * @param {boolean} isHidden - Скрывать ли комментарий
+ * @returns {HTMLLIElement} Созданный элемент списка комментариев
+ */
 const createCommentElement = (comment, isHidden) => {
   const commentItem = document.createElement('li');
   commentItem.className = 'social__comment';
@@ -43,6 +50,12 @@ const createCommentElement = (comment, isHidden) => {
 };
 
 
+/**
+ * Обновляет счётчик показанных комментариев и скрывает кнопку загрузки,
+ * если показаны все комментарии
+ *
+ * @param {number} commentsCount - Новое количество показанных комментариев
+ */
 const updateShownCommentsCounter = (commentsCount) => {
   shownCommentsCount = commentsCount;
   bigPictureShownComments.textContent = shownCommentsCount;
@@ -53,6 +66,11 @@ const updateShownCommentsCounter = (commentsCount) => {
 };
 
 
+/**
+ * Отрисовывает все комментарии для большой фотографии
+ *
+ * @param {Array<Object>} comments - Массив объектов комментариев
+ */
 const renderComments = (comments) => {
   totalCommentsCount = comments.length;
   bigPictureTotalComments.textContent = totalCommentsCount;
@@ -72,6 +90,9 @@ const renderComments = (comments) => {
 };
 
 
+/**
+ * Отображает следующую порцию комментариев
+ */
 const showCommentsPortion = () => {
   const lastCommentToShow = Math.min(shownCommentsCount + COMMENTS_LOAD_STEP, totalCommentsCount);
 
@@ -83,6 +104,11 @@ const showCommentsPortion = () => {
 };
 
 
+/**
+ * Обработчик нажатия клавиши на документе. Закрывает большую фотографию по Escape
+ *
+ * @param {KeyboardEvent} evt - Объект события клавиатуры
+ */
 const onDocumentKeydown = (evt) => {
   if (isEscapeKey(evt)) {
     evt.preventDefault();
@@ -91,12 +117,18 @@ const onDocumentKeydown = (evt) => {
 };
 
 
+/**
+ * Переключает видимость модального окна с большой фотографией
+ */
 const togglePictureModal = () => {
   bigPicture.classList.toggle('hidden');
   document.body.classList.toggle('modal-open');
 };
 
 
+/**
+ * Закрывает модальное окно с большой фотографией
+ */
 function closeBigPicture () {
   togglePictureModal();
 
@@ -106,6 +138,11 @@ function closeBigPicture () {
 }
 
 
+/**
+ * Открывает модальное окно с большой фотографией
+ *
+ * @param {Object} photo - Объект фотографии
+ */
 const openBigPicture = (photo) => {
   bigPictureImg.src = photo.url;
   bigPictureDescription.textContent = photo.description;
