@@ -14,7 +14,10 @@ const renderPicture = (photo) => {
   photoCard.querySelector('.picture__comments').textContent = photo.comments.length;
   photoCard.querySelector('.picture__likes').textContent = photo.likes;
 
-  photoCard.addEventListener('click', () => openBigPicture(photo));
+  photoCard.addEventListener('click', (evt) => {
+    evt.preventDefault();
+    openBigPicture(photo);
+  });
 
   return photoCard;
 };
