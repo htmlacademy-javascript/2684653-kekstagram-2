@@ -7,7 +7,7 @@ const uploadForm = document.querySelector('.img-upload__form');
 const uploadFormOverlay = uploadForm.querySelector('.img-upload__overlay');
 const uploadFormCancel = uploadForm.querySelector('.img-upload__cancel');
 
-const ImgInput = uploadForm.querySelector('.img-upload__input');
+const imgInput = uploadForm.querySelector('.img-upload__input');
 const hashtagInput = uploadForm.querySelector('.text__hashtags');
 const descriptionInput = uploadForm.querySelector('.text__description');
 
@@ -64,7 +64,7 @@ const getHashtagErrorMessage = (value) => {
 /**
  * Валидирует комментарий к загружаемой фотографии
  */
-const validateDescription = (value) => value.length < MAX_COMMENT_LENGTH;
+const validateDescription = (value) => value.length <= MAX_COMMENT_LENGTH;
 
 
 /**
@@ -80,7 +80,7 @@ const toggleFormModal = () => {
  * Сбрасывает значения всех полей формы загрузки изображения
  */
 const clearFormInputs = () => {
-  ImgInput.value = '';
+  imgInput.value = '';
   hashtagInput.value = '';
   descriptionInput.value = '';
 
@@ -152,7 +152,7 @@ pristine.addValidator(
   'Превышена максимальная длина комментария'
 );
 
-ImgInput.addEventListener('input', () => openUploadForm());
+imgInput.addEventListener('input', () => openUploadForm());
 uploadFormCancel.addEventListener('click', () => closeUploadForm());
 
 uploadForm.addEventListener('submit', onUploadFormSubmit);
