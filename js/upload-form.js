@@ -11,6 +11,8 @@ const imgInput = uploadForm.querySelector('.img-upload__input');
 const hashtagInput = uploadForm.querySelector('.text__hashtags');
 const descriptionInput = uploadForm.querySelector('.text__description');
 
+let hashtagErrorMessage = '';
+
 
 const pristine = new Pristine(uploadForm, {
   classTo: 'img-upload__field-wrapper',
@@ -19,45 +21,34 @@ const pristine = new Pristine(uploadForm, {
   errorTextClass: 'img-upload__field-wrapper--error'
 });
 
-const hashtagRegExp = new RegExp('^#[a-zа-яё0-9]{1,19}$', 'i');
+const hashtagRegExp = /^#[a-zа-яё0-9]{1,19}$/i;
 /**
  * Валидирует хэштеги загружаемой фотографии
  */
 const validateHashtag = (value) => {
-  if (value !== '') {
-    const hashtags = value.trim().split(' ').map((tag) => (tag.toLowerCase()));
+  hashtagErrorMessage = '';
 
-    if ((hashtags.length > MAX_HASHTAG_COUNT) || (checkIfDuplicateExists(hashtags))) {
+  if (value.trim() !== '') {
+    const hashtags = value.trim().toLowerCase().split(/\s+/);
+
+    if (hashtags.length > MAX_HASHTAG_COUNT) {
+      hashtagErrorMessage = 'Превышено количество хэштегов';
+      return false;
+    }
+
+    if (checkIfDuplicateExists(hashtags)) {
+      hashtagErrorMessage = 'Хэштеги повторяются';
       return false;
     }
 
     for (let i = 0; i < hashtags.length; i++) {
       if (!hashtagRegExp.test(hashtags[i])) {
+        hashtagErrorMessage = 'Введён невалидный хэштег';
         return false;
       }
     }
   }
   return true;
-};
-
-
-/**
- * Генерирует сообщение об ошибке для введенных хэштегов
- */
-const getHashtagErrorMessage = (value) => {
-  if (value !== '') {
-    const hashtags = value.trim().split(' ').map((tag) => (tag.toLowerCase()));
-
-    if (hashtags.length > MAX_HASHTAG_COUNT) {
-      return 'Превышено количество хэштегов';
-    }
-
-    if (checkIfDuplicateExists(hashtags)) {
-      return 'Хэштеги повторяются';
-    }
-
-  }
-  return 'Введён невалидный хэштег';
 };
 
 
@@ -140,7 +131,7 @@ hashtagInput.addEventListener('keydown', (evt) => {
 pristine.addValidator(
   hashtagInput,
   validateHashtag,
-  getHashtagErrorMessage
+  () => hashtagErrorMessage
 );
 
 descriptionInput.addEventListener('keydown', (evt) => {
