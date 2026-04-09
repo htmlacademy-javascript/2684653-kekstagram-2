@@ -45,4 +45,28 @@ const checkIfDuplicateExists = (elements) => new Set(elements).size !== elements
  */
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-export {getRandomInteger, getRandomArrayElement, isEscapeKey, checkIfDuplicateExists};
+
+const debounce = (callback, debounceDelay) => {
+  let timeoutId;
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), debounceDelay);
+  };
+};
+
+
+const throttle = (callback, throttleDelay) => {
+  let lastCallTime = 0;
+
+  return (...rest) => {
+    const now = new Date();
+
+    if (now - lastCallTime >= throttleDelay) {
+      callback.apply(this, rest);
+      lastCallTime = now;
+    }
+  };
+};
+
+
+export {getRandomInteger, getRandomArrayElement, isEscapeKey, checkIfDuplicateExists, debounce, throttle};
