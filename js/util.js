@@ -30,6 +30,32 @@ const getRandomArrayElement = (elements) => elements[getRandomInteger(0, element
 
 
 /**
+ * Возвращает случайные элементы из переданного массива.
+ *
+ * @param {Array} elements - Массив элементов
+ * @param {number} getCount - Количество элементов для выбора
+ * @returns {Array} Случайная выборка элементов из массива
+ *
+ */
+const getRandomArrayElements = (elements, getCount) => {
+  if (getCount >= elements.length) {
+    return elements;
+  }
+
+  const randomArray = [];
+
+  for (let i = 0; i < getCount; i++) {
+    let randomElement = getRandomArrayElement(elements);
+    while (randomArray.includes(randomElement)) {
+      randomElement = getRandomArrayElement(elements);
+    }
+    randomArray.push(randomElement);
+  }
+  return randomArray;
+};
+
+
+/**
  * Проверяет есть ли дубликаты в массиве.
  *
  * @param {Array} elements - Массив элементов
@@ -69,4 +95,4 @@ const throttle = (callback, throttleDelay) => {
 };
 
 
-export {getRandomInteger, getRandomArrayElement, isEscapeKey, checkIfDuplicateExists, debounce, throttle};
+export {getRandomInteger, getRandomArrayElement, isEscapeKey, checkIfDuplicateExists, getRandomArrayElements, debounce, throttle};
