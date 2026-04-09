@@ -3,7 +3,6 @@ import {isEscapeKey} from './util.js';
 const ERROR_SHOW_TIME = 5000;
 
 const loadErrorTemplate = document.querySelector('#data-error').content.querySelector('.data-error');
-const formErrorTemplate = document.querySelector('#error').content.querySelector('.error');
 
 
 const showLoadError = (message) => {
@@ -18,35 +17,34 @@ const showLoadError = (message) => {
 };
 
 
-const showFormError = (message, onShow, onRemove) => {
-  const formError = formErrorTemplate.cloneNode(true);
-  formError.querySelector('.error__title').textContent = message;
+const showFormMessage = (state, onShow, onRemove) => {
+  const formMessage = document.querySelector(`#${state}`).content.querySelector(`.${state}`).cloneNode(true);
 
   const onDocumentKeydown = (evt) => {
     if (isEscapeKey(evt)) {
       evt.preventDefault();
-      removeFormError();
+      removeFormMessage();
     }
   };
 
-  function removeFormError () {
-    formError.remove();
+  function removeFormMessage () {
+    formMessage.remove();
     document.removeEventListener('keydown', onDocumentKeydown);
     onRemove?.();
   }
 
-  formError.querySelector('.error__button').addEventListener('click', () => removeFormError());
-  formError.addEventListener('click', (evt) => {
-    if (!evt.target.closest('.error__inner')) {
-      removeFormError();
+  formMessage.querySelector(`.${state}__button`).addEventListener('click', () => removeFormMessage());
+  formMessage.addEventListener('click', (evt) => {
+    if (!evt.target.closest(`.${state}__inner`)) {
+      removeFormMessage();
     }
   });
 
   document.addEventListener('keydown', onDocumentKeydown);
 
-  document.body.append(formError);
+  document.body.append(formMessage);
   onShow?.();
 };
 
 
-export {showLoadError, showFormError};
+export {showLoadError, showFormMessage};

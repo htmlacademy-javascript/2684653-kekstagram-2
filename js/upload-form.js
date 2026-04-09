@@ -1,5 +1,5 @@
 import {sendData} from './api.js';
-import {showFormError} from './data-errors.js';
+import {showFormMessage} from './data-messages.js';
 import {isEscapeKey, checkIfDuplicateExists} from './util.js';
 
 const MAX_HASHTAG_COUNT = 5;
@@ -227,9 +227,12 @@ const onUploadFormSubmit = (evt) => {
   if (pristine.validate()) {
     blockSubmitButton();
     sendData(new FormData(evt.target))
-      .then(closeUploadForm)
-      .catch((err) => {
-        showFormError(err.message, disableFormEsc, enableFormEsc);
+      .then(() => {
+        closeUploadForm();
+        showFormMessage('success');
+      })
+      .catch(() => {
+        showFormMessage('error', disableFormEsc, enableFormEsc);
       })
       .finally(unblockSubmitButton);
   }
