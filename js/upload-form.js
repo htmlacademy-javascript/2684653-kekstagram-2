@@ -1,3 +1,5 @@
+import {sendData} from './api.js';
+import {showFormError} from './data-errors.js';
 import {isEscapeKey, checkIfDuplicateExists} from './util.js';
 
 const MAX_HASHTAG_COUNT = 5;
@@ -6,6 +8,11 @@ const MAX_COMMENT_LENGTH = 140;
 const IMAGE_SCALE_STEP = 25;
 const MIN_IMAGE_SCALE = 25;
 const MAX_IMAGE_SCALE = 100;
+
+const SubmitButtonText = {
+  IDLE: 'Опубликовать',
+  SENDING: 'Публикация...'
+};
 
 const uploadForm = document.querySelector('.img-upload__form');
 const uploadFormOverlay = uploadForm.querySelector('.img-upload__overlay');
@@ -25,6 +32,8 @@ const effectLevelValue = effectLevel.querySelector('.effect-level__value');
 const scaleValue = uploadForm.querySelector('.scale__control--value');
 const scaleSmallerButton = uploadForm.querySelector('.scale__control--smaller');
 const scaleBiggerButton = uploadForm.querySelector('.scale__control--bigger');
+
+const submitButton = uploadForm.querySelector('.img-upload__submit');
 
 let hashtagErrorMessage = '';
 let currentImageScale = MAX_IMAGE_SCALE;
@@ -182,15 +191,29 @@ const onDocumentKeydown = (evt) => {
 };
 
 
+const enableFormEsc = () => document.addEventListener('keydown', onDocumentKeydown);
+const disableFormEsc = () => document.removeEventListener('keydown', onDocumentKeydown);
+
+
 /**
  * Закрывает модальное окно с формой загрузки фотографии
  */
 function closeUploadForm () {
   clearFormInputs();
   toggleFormModal();
-
-  document.removeEventListener('keydown', onDocumentKeydown);
+  disableFormEsc();
 }
+
+
+const blockSubmitButton = () => {
+  submitButton.disabled = true;
+  submitButton.textContent = SubmitButtonText.SENDING;
+};
+
+const unblockSubmitButton = () => {
+  submitButton.disabled = false;
+  submitButton.textContent = SubmitButtonText.IDLE;
+};
 
 
 /**
@@ -199,8 +222,16 @@ function closeUploadForm () {
  * @param {Event} evt - Объект события
  */
 const onUploadFormSubmit = (evt) => {
-  if (!pristine.validate()) {
-    evt.preventDefault();
+  evt.preventDefault();
+
+  if (pristine.validate()) {
+    blockSubmitButton();
+    sendData(new FormData(evt.target))
+      .then(closeUploadForm)
+      .catch((err) => {
+        showFormError(err.message, disableFormEsc, enableFormEsc);
+      })
+      .finally(unblockSubmitButton);
   }
 };
 
@@ -211,7 +242,7 @@ const onUploadFormSubmit = (evt) => {
  */
 const openUploadForm = () => {
   toggleFormModal();
-  document.addEventListener('keydown', onDocumentKeydown);
+  enableFormEsc();
 };
 
 
