@@ -1,7 +1,8 @@
-import {createPhotos} from './data.js';
+import {getData} from './api.js';
+import {showLoadError} from './data-messages.js';
 import {renderPictures} from './pictures.js';
 import './upload-form.js';
 
-const PHOTO_COUNT = 25;
-
-renderPictures(createPhotos(PHOTO_COUNT));
+getData()
+  .then((photos) => renderPictures(photos))
+  .catch((err) => showLoadError(err.message));
