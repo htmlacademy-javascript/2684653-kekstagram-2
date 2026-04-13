@@ -3,6 +3,9 @@ import {openBigPicture} from './big-picture.js';
 const pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
 const picturesSection = document.querySelector('.pictures');
 
+const picturesTitle = picturesSection.querySelector('.pictures__title');
+const picturesUpload = picturesSection.querySelector('.img-upload');
+
 
 /**
  * Создаёт DOM-элемент карточки фотографии.
@@ -33,10 +36,18 @@ const renderPicture = (photo) => {
  * Отрисовывает все фотографии на странице
  *
  * @param {Array<Object>} photos - Массив объектов фотографий
+ * @param {function} filterCallback - Функция фильтрации фотографий перед отображением
  */
-const renderPictures = (photos) => {
+const renderPictures = (photos, filterCallback) => {
   const picturesFragment = document.createDocumentFragment();
-  photos.forEach((photo) => picturesFragment.append(renderPicture(photo)));
+
+  const renderingPictures = filterCallback ? filterCallback(photos) : photos.slice();
+
+  renderingPictures.forEach((photo) => picturesFragment.append(renderPicture(photo)));
+
+  picturesSection.innerHTML = '';
+  picturesSection.append(picturesTitle);
+  picturesSection.append(picturesUpload);
   picturesSection.append(picturesFragment);
 };
 

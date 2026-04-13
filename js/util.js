@@ -30,6 +30,32 @@ const getRandomArrayElement = (elements) => elements[getRandomInteger(0, element
 
 
 /**
+ * Возвращает случайные элементы из переданного массива.
+ *
+ * @param {Array} elements - Массив элементов
+ * @param {number} getCount - Количество элементов для выбора
+ * @returns {Array} Случайная выборка элементов из массива
+ *
+ */
+const getRandomArrayElements = (elements, getCount) => {
+  if (getCount >= elements.length) {
+    return elements;
+  }
+
+  const randomArray = [];
+
+  for (let i = 0; i < getCount; i++) {
+    let randomElement = getRandomArrayElement(elements);
+    while (randomArray.includes(randomElement)) {
+      randomElement = getRandomArrayElement(elements);
+    }
+    randomArray.push(randomElement);
+  }
+  return randomArray;
+};
+
+
+/**
  * Проверяет есть ли дубликаты в массиве.
  *
  * @param {Array} elements - Массив элементов
@@ -45,4 +71,28 @@ const checkIfDuplicateExists = (elements) => new Set(elements).size !== elements
  */
 const isEscapeKey = (evt) => evt.key === 'Escape';
 
-export {getRandomInteger, getRandomArrayElement, isEscapeKey, checkIfDuplicateExists};
+
+const debounce = (callback, debounceDelay) => {
+  let timeoutId;
+  return (...rest) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => callback.apply(this, rest), debounceDelay);
+  };
+};
+
+
+const throttle = (callback, throttleDelay) => {
+  let lastCallTime = 0;
+
+  return (...rest) => {
+    const now = new Date();
+
+    if (now - lastCallTime >= throttleDelay) {
+      callback.apply(this, rest);
+      lastCallTime = now;
+    }
+  };
+};
+
+
+export {getRandomInteger, getRandomArrayElement, isEscapeKey, checkIfDuplicateExists, getRandomArrayElements, debounce, throttle};
