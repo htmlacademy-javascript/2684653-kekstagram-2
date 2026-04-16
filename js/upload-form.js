@@ -1,5 +1,5 @@
 import {sendData} from './api.js';
-import {showFormMessage} from './data-messages.js';
+import {showFormMessage, showLoadError} from './data-messages.js';
 import {isEscapeKey, checkIfDuplicateExists} from './util.js';
 
 const MAX_HASHTAG_COUNT = 5;
@@ -8,6 +8,8 @@ const MAX_COMMENT_LENGTH = 140;
 const IMAGE_SCALE_STEP = 25;
 const MIN_IMAGE_SCALE = 25;
 const MAX_IMAGE_SCALE = 100;
+
+const FILE_TYPES = ['jpg', 'jpeg', 'png'];
 
 const SubmitButtonText = {
   IDLE: 'Опубликовать',
@@ -267,7 +269,18 @@ pristine.addValidator(
   'Превышена максимальная длина комментария'
 );
 
-imgInput.addEventListener('input', () => openUploadForm());
+imgInput.addEventListener('input', () => {
+  const selectedImage = imgInput.files[0];
+
+  const fileName = selectedImage.name.toLowerCase();
+
+  if (FILE_TYPES.some((it) => fileName.endsWith(it))) {
+    imgPreview.src = URL.createObjectURL(selectedImage);
+    openUploadForm();
+  } else {
+    showLoadError(`Неверный формат. Выберите файл в одном из перечисленных форматов: ${FILE_TYPES.join(', ')}`);
+  }
+});
 uploadFormCancel.addEventListener('click', () => closeUploadForm());
 
 uploadForm.addEventListener('submit', onUploadFormSubmit);
